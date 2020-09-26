@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class ReservationController extends Controller
 {
@@ -14,9 +16,18 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $reservation = Reservation::orderBy('id', 'desc')->get();
-        return response()->json($reservation);
+        // $reservation = Reservation::orderBy('id', 'desc')->get();
+        // return response()->json($reservation);
+    
+        $reservations = DB::table('users')
+        ->join('reservations', 'reservations.customer_id', '=', 'users.id')
+        ->select('*','users.id as id_cus ')
+        ->get();
+
+        return response()->json($reservations);
     }
+    
+    
 
     /**
      * Store a newly created resource in storage.
@@ -28,10 +39,10 @@ class ReservationController extends Controller
     {
         $reservation = new Reservation;
         $reservation->total_price=$request->total_price;
+        $reservation->number_of_nights=$request->number_of_nights;
         $reservation->checkin=$request->checkin;
         $reservation->checkout=$request->checkout;
         $reservation->customer_id =$request->customer_id ;
-        $reservation->room_id  =$request->room_id  ;
         $reservation->room_name  =$request->room_name ;
         $reservation->save();
         return response()->json($request);

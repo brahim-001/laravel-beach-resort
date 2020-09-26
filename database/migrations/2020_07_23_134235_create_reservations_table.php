@@ -17,12 +17,12 @@ class CreateReservationsTable extends Migration
             $table->id();
             $table->bigInteger('customer_id')->unsigned()->nullable();
             $table->string('room_name');
-            $table->bigInteger('room_id');
-            $table->date('checkin');
-            $table->date('checkout');
+            $table->date('checkin')->format('dd/mm/YY');
+            $table->date('checkout')->format('dd/mm/YY');
+            $table->float('number_of_nights');
             $table->float('total_price');
             $table->timestamps();
-            $table->foreign('customer_id')->references('id')->on('customers')->ondelete('cascade'); 
+            $table->foreign('customer_id')->references('id')->on('users')->ondelete('cascade'); 
         });   
     }
 
